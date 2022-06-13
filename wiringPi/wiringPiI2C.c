@@ -196,7 +196,7 @@ int wiringPiI2CWriteReg16 (int fd, int reg, int value)
 * Erez Added 
 *   Write a block of N bytes 
 */
-int wiringPiI2CWriteRegN(int fd, int reg, int *value, uint8_t N)
+int wiringPiI2CWriteRegN(int fd, int reg, uint8_t *value, int N)
 {
   union i2c_smbus_data data ;
 
@@ -210,7 +210,7 @@ int wiringPiI2CWriteRegN(int fd, int reg, int *value, uint8_t N)
 
 
 // Pass in pointer to array 
-int wiringPiI2CReadRegN(int fd, int reg, int *value, uint8_t N)
+int wiringPiI2CReadRegN(int fd, int reg, uint8_t *value, int N)
 {
   union i2c_smbus_data data;
 
