@@ -201,7 +201,7 @@ int wiringPiI2CWriteRegN(int fd, int reg, int *value, uint32_t N)
   union i2c_smbus_data data ;
 
   data.block[0] = N;   // first byte for length?
-  for (uint32_t i = 0, i < N, i++) { 
+  for (uint32_t i = 0; i < N; i++) { 
     data.block[i + 1] = value[i];   // copy from array byte by byte
   } 
 
@@ -218,7 +218,7 @@ int wiringPiI2CReadRegN(int fd, int reg, int *value, uint32_t N)
     return -1 ;
   } else {
     
-    for (uint32_t i = 0, i < N, i++) { 
+    for (uint32_t i = 0; i < N; i++) { 
       value[i] = data.block[i + 1];// copy from array byte by byte
     } 
     return 1;  // succes flag I guess 
