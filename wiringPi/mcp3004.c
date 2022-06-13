@@ -6,7 +6,7 @@
  *	Thanks also to "ShorTie" on IRC for some remote debugging help!
  ***********************************************************************
  * This file is part of wiringPi:
- *	https://github.com/WiringPi/WiringPi/
+ *	https://projects.drogon.net/raspberry-pi/wiringpi/
  *
  *    wiringPi is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Lesser General Public License as
@@ -63,8 +63,8 @@ static int myAnalogRead (struct wiringPiNodeStruct *node, int pin)
 int mcp3004Setup (const int pinBase, int spiChannel)
 {
   struct wiringPiNodeStruct *node ;
-
-  if (wiringPiSPISetup (spiChannel, 1000000) < 0)
+  // Erez changed, was 1000000, now 3000000
+  if (wiringPiSPISetup (spiChannel, 3000000) < 0)
     return FALSE ;
 
   node = wiringPiNewNode (pinBase, 8) ;
@@ -74,3 +74,4 @@ int mcp3004Setup (const int pinBase, int spiChannel)
 
   return TRUE ;
 }
+

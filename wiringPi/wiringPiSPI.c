@@ -4,7 +4,7 @@
  *	Copyright (c) 2012-2015 Gordon Henderson
  ***********************************************************************
  * This file is part of wiringPi:
- *	https://github.com/WiringPi/WiringPi/
+ *	https://projects.drogon.net/raspberry-pi/wiringpi/
  *
  *    wiringPi is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Lesser General Public License as
@@ -46,9 +46,11 @@
 static const uint8_t     spiBPW   = 8 ;
 static const uint16_t    spiDelay = 0 ;
 
-static uint32_t    spiSpeeds [2] ;
-static int         spiFds [2] ;
-
+//static uint32_t    spiSpeeds [2] ;
+//static int         spiFds [2] ;
+// Replacing with 5x1 array, channels 2,3,4 correspond to channels 0,1,2 on SPI 1 now 
+static uint32_t spiSpeeds[5];
+static int  spiFds[5];
 
 /*
  * wiringPiSPIGetFd:
@@ -58,7 +60,8 @@ static int         spiFds [2] ;
 
 int wiringPiSPIGetFd (int channel)
 {
-  return spiFds [channel & 1] ;
+  //return spiFds [channel & 1] ;
+  return spiFds [channel];
 }
 
 
@@ -75,7 +78,7 @@ int wiringPiSPIDataRW (int channel, unsigned char *data, int len)
 {
   struct spi_ioc_transfer spi ;
 
-  channel &= 1 ;
+  //channel &= 1 ;  // why?
 
 // Mentioned in spidev.h but not used in the original kernel documentation
 //	test program )-:
@@ -108,8 +111,11 @@ int wiringPiSPISetupMode (int channel, int speed, int mode)
 
 // Channel can be anything - lets hope for the best
 //  channel &= 1 ;	// Channel is 0 or 1
-
-  snprintf (spiDev, 31, "/dev/spidev0.%d", channel) ;
+  if (channel < 2) {
+      snprintf (spiDev, 31, "/dev/spidev0.%d", channel) ;
+   } else {
+      snprintf(spiDev, 31, "/dev/spidev1.%d", channel-2);
+   }
 
   if ((fd = open (spiDev, O_RDWR)) < 0)
     return wiringPiFailure (WPI_ALMOST, "Unable to open SPI device: %s\n", strerror (errno)) ;
@@ -142,3 +148,4 @@ int wiringPiSPISetup (int channel, int speed)
 {
   return wiringPiSPISetupMode (channel, speed, 0) ;
 }
+
