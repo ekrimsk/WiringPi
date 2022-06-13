@@ -84,6 +84,8 @@
 
 // Structures used in the ioctl() calls
 
+// EREZ NOTE: PEC is a checksum 
+
 union i2c_smbus_data
 {
   uint8_t  byte ;
@@ -187,6 +189,40 @@ int wiringPiI2CWriteReg16 (int fd, int reg, int value)
 
   data.word = value ;
   return i2c_smbus_access (fd, I2C_SMBUS_WRITE, reg, I2C_SMBUS_WORD_DATA, &data) ;
+}
+
+
+/*
+* Erez Added 
+*   Write a block of N bytes 
+*/
+int wiringPiI2CWriteRegN(int fd, int reg, int *value, uint32_t N)
+{
+  union i2c_smbus_data data ;
+
+  data.block[0] = N;   // first byte for length?
+  for (uint32_t i = 0, i < N, i++) { 
+    data.block[i + 1] = value[i];   // copy from array byte by byte
+  } 
+
+  return i2c_smbus_access (fd, I2C_SMBUS_WRITE, reg, I2C_SMBUS_BLOCK_DATA, &data) ;
+}
+
+
+// Pass in pointer to array 
+int wiringPiI2CReadRegN(int fd, int reg, int *value, uint32_t N)
+{
+  union i2c_smbus_data data;
+
+  if (i2c_smbus_access (fd, I2C_SMBUS_READ, reg, I2C_SMBUS_BLOCK_DATA, &data)) {
+    return -1 ;
+  } else {
+    
+    for (uint32_t i = 0, i < N, i++) { 
+      value[i] = data.block[i + 1];// copy from array byte by byte
+    } 
+    return 1;  // succes flag I guess 
+  }
 }
 
 
