@@ -57,6 +57,10 @@
 #include "wiringPi.h"
 #include "wiringPiI2C.h"
 
+
+// https://forums.raspberrypi.com/viewtopic.php?t=248074
+#include "/usr/include/linux/i2c.h"
+
 // I2C definitions
 
 #define I2C_SLAVE	0x0703
@@ -85,6 +89,8 @@
 // Structures used in the ioctl() calls
 
 // EREZ NOTE: PEC is a checksum (Packet Error Checking)
+
+// See here: https://github.com/ev3dev/i2c-tools/blob/ev3dev-stretch/include/linux/i2c-dev.h
 
 union i2c_smbus_data
 {
@@ -196,6 +202,10 @@ int wiringPiI2CWriteReg16 (int fd, int reg, int value)
 * Erez Added 
 *   Write a block of N bytes 
 */
+
+I2C_FUNC_SMBUS_WRITE_I2C_BLOCK
+
+
 int wiringPiI2CWriteRegN(int fd, int reg, uint8_t *value, int N)
 {
   union i2c_smbus_data data ;
@@ -216,9 +226,33 @@ int wiringPiI2CWriteRegN(int fd, int reg, uint8_t *value, int N)
   } 
   */
 
-  return i2c_smbus_access (fd, I2C_SMBUS_WRITE, reg, I2C_SMBUS_BLOCK_DATA, &data) ;
+  //return i2c_smbus_access (fd, I2C_SMBUS_WRITE, reg, I2C_SMBUS_BLOCK_DATA, &data) ;
+
+  return i2c_smbus_access (fd, I2C_SMBUS_WRITE, reg, I2C_SMBUS_I2C_BLOCK_BROKEN, &data) ;
+
 }
 
+
+/*
+int wiringPiI2CWriteRegN(int fd, int reg, uint8_t *value, int N)
+{
+  union i2c_smbus_data data ;
+
+  // UNCLEAR WHat the deal with the "size" argument is 
+  // do we put it in the first bit 
+
+  
+  data.block[0] = N;   // first byte for length?
+  for (uint8_t i = 0; i < N; i++) { 
+    data.block[i + 1] = value[i];   // copy from array byte by byte
+  } 
+  
+
+
+
+  return i2c_smbus_access (fd, I2C_SMBUS_WRITE, reg, I2C_SMBUS_BLOCK_DATA, &data) ;
+}
+*/
 
 // Pass in pointer to array 
 int wiringPiI2CReadRegN(int fd, int reg, uint8_t *value, int N)
