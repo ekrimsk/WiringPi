@@ -59,7 +59,7 @@
 
 
 // https://forums.raspberrypi.com/viewtopic.php?t=248074
-#include "/usr/include/linux/i2c.h"
+//#include "/usr/include/linux/i2c.h"
 
 // I2C definitions
 
