@@ -37,6 +37,7 @@ extern int wiringPiI2CRead           (int fd) ;
 extern int wiringPiI2CReadReg8       (int fd, int reg) ;
 extern int wiringPiI2CReadReg16      (int fd, int reg) ;
 extern int wiringPiI2CReadRegN(int fd, int reg, uint8_t *value, int N); // Erez Added 
+extern int wiringPiI2CReadRegN2(int fd, int reg, uint8_t *value, int N); // Erez Added 
 
 extern int wiringPiI2CWrite          (int fd, int data) ;
 extern int wiringPiI2CWriteReg8      (int fd, int reg, int data) ;

@@ -267,9 +267,7 @@ int wiringPiI2CReadRegN(int fd, int reg, uint8_t *value, int N)
   } else {
     
     for (uint8_t i = 0; i < N; i++) { 
-      //value[i] = data.block[i + 1];// copy from array byte by byte
-    
-      value[i] = data.block[i];// copy from array byte by byte
+      value[i] = data.block[i + 1];// copy from array byte by byte
 
 
     } 
@@ -278,8 +276,8 @@ int wiringPiI2CReadRegN(int fd, int reg, uint8_t *value, int N)
 }
 
 
-/*
-int wiringPiI2CReadRegN(int fd, int reg, uint8_t *value, int N)
+
+int wiringPiI2CReadRegN2(int fd, int reg, uint8_t *value, int N)
 {
   union i2c_smbus_data data;
 
@@ -291,12 +289,12 @@ int wiringPiI2CReadRegN(int fd, int reg, uint8_t *value, int N)
   } else {
     
     for (uint8_t i = 0; i < N; i++) { 
-      value[i] = data.block[i + 1];// copy from array byte by byte
+      value[i] = data.block[i];// copy from array byte by byte
     } 
     return data.block[0];  // succes flag I guess 
   }
 }
-*/
+
 
 /*
  * wiringPiI2CSetupInterface:
