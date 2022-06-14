@@ -203,8 +203,6 @@ int wiringPiI2CWriteReg16 (int fd, int reg, int value)
 *   Write a block of N bytes 
 */
 
-I2C_FUNC_SMBUS_WRITE_I2C_BLOCK
-
 
 int wiringPiI2CWriteRegN(int fd, int reg, uint8_t *value, int N)
 {
