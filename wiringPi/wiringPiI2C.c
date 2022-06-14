@@ -257,14 +257,17 @@ int wiringPiI2CReadRegN(int fd, int reg, uint8_t *value, int N)
 {
   union i2c_smbus_data data;
 
-  if (i2c_smbus_access (fd, I2C_SMBUS_READ, reg, I2C_SMBUS_BLOCK_DATA, &data)) {
+  data.block[0] = N; 
+
+  if (i2c_smbus_access (fd, I2C_SMBUS_READ, reg,  N == 32 ? I2C_SMBUS_I2C_BLOCK_BROKEN :
+                        I2C_SMBUS_I2C_BLOCK_DATA, &data)) {
     return -1 ;
   } else {
     
     for (uint8_t i = 0; i < N; i++) { 
       value[i] = data.block[i + 1];// copy from array byte by byte
     } 
-    return 1;  // succes flag I guess 
+    return data.block[0];  // succes flag I guess 
   }
 }
 
