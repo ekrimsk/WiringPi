@@ -84,7 +84,7 @@
 
 // Structures used in the ioctl() calls
 
-// EREZ NOTE: PEC is a checksum 
+// EREZ NOTE: PEC is a checksum (Packet Error Checking)
 
 union i2c_smbus_data
 {
@@ -200,10 +200,20 @@ int wiringPiI2CWriteRegN(int fd, int reg, uint8_t *value, int N)
 {
   union i2c_smbus_data data ;
 
+  // UNCLEAR WHat the deal with the "size" argument is 
+  // do we put it in the first bit 
+
+  /*
   data.block[0] = N;   // first byte for length?
   for (uint8_t i = 0; i < N; i++) { 
     data.block[i + 1] = value[i];   // copy from array byte by byte
   } 
+  */ 
+
+  for (uint8_t i = 0; i < N; i++) { 
+    data.block[i] = value[i];   // copy from array byte by byte
+  } 
+
 
   return i2c_smbus_access (fd, I2C_SMBUS_WRITE, reg, I2C_SMBUS_BLOCK_DATA, &data) ;
 }
