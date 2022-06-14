@@ -215,6 +215,8 @@ int wiringPiI2CWriteRegN(int fd, int reg, uint8_t *value, int N)
   data.block[0] = N;   // first byte for length?
   for (uint8_t i = 0; i < N; i++) { 
     data.block[i + 1] = value[i];   // copy from array byte by byte
+  
+
   } 
   
 
@@ -265,12 +267,36 @@ int wiringPiI2CReadRegN(int fd, int reg, uint8_t *value, int N)
   } else {
     
     for (uint8_t i = 0; i < N; i++) { 
-      value[i] = data.block[i + 1];// copy from array byte by byte
+      //value[i] = data.block[i + 1];// copy from array byte by byte
+    
+      value[i] = data.block[i];// copy from array byte by byte
+
+
     } 
     return data.block[0];  // succes flag I guess 
   }
 }
 
+
+/*
+int wiringPiI2CReadRegN(int fd, int reg, uint8_t *value, int N)
+{
+  union i2c_smbus_data data;
+
+  data.block[0] = N; 
+
+  if (i2c_smbus_access (fd, I2C_SMBUS_READ, reg,  N == 32 ? I2C_SMBUS_I2C_BLOCK_BROKEN :
+                        I2C_SMBUS_I2C_BLOCK_DATA, &data)) {
+    return -1 ;
+  } else {
+    
+    for (uint8_t i = 0; i < N; i++) { 
+      value[i] = data.block[i + 1];// copy from array byte by byte
+    } 
+    return data.block[0];  // succes flag I guess 
+  }
+}
+*/
 
 /*
  * wiringPiI2CSetupInterface:
